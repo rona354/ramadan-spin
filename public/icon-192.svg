@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="32" fill="#0F1729"/>
+  <circle cx="96" cy="96" r="70" fill="#1E293B" stroke="#F5C542" stroke-width="4"/>
+  <text x="96" y="115" font-size="70" text-anchor="middle" font-family="sans-serif">🌙</text>
+</svg>
