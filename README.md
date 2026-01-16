@@ -78,7 +78,7 @@ npm run lint     # Run ESLint
 
 ## Contributing
 
-Contributions welcome! See [PLAN.md](./PLAN.md) for detailed architecture and product vision.
+Contributions welcome!
 
 ### Good First Contributions
 
@@ -114,6 +114,3 @@ Contributions welcome! See [PLAN.md](./PLAN.md) for detailed architecture and pr
 
 MIT — See [LICENSE](./LICENSE)
 
----
-
-*For detailed product vision, architecture decisions, and implementation notes, see [PLAN.md](./PLAN.md)*
