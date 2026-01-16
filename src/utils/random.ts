@@ -1,4 +1,9 @@
-import type { MenuItem } from '../data/sahur';
+import type { MenuItem, Region } from '../data/sahur';
+
+export function filterByRegion(items: MenuItem[], region: Region | 'semua'): MenuItem[] {
+  if (region === 'semua') return items;
+  return items.filter((item) => !item.region || item.region === region);
+}
 
 export function getRandomItem<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)];

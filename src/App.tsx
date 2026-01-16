@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { SlotMachine } from './components/SlotMachine';
 import { ShareCard } from './components/ShareCard';
 import { ModeSelector } from './components/ModeSelector';
+import { RegionSelector } from './components/RegionSelector';
 import { StreakBadge } from './components/StreakBadge';
 import { HistoryList } from './components/HistoryList';
 import { FunFact } from './components/FunFact';
@@ -18,12 +19,12 @@ import { useSpinLimit } from './hooks/useSpinLimit';
 import { useStreak } from './hooks/useStreak';
 import { useHistory } from './hooks/useHistory';
 import { useAchievements } from './hooks/useAchievements';
-import { getSahurCombo, getRandomItem, getRandomItems } from './utils/random';
+import { getSahurCombo, getRandomItem, getRandomItems, filterByRegion } from './utils/random';
 import { shareResult, generateShareText, copyShareText, shareToWhatsApp, getRamadanDay } from './utils/share';
 import { playSound } from './utils/sound';
 import { getRandomFact } from './data/funFacts';
 import { checkRareCombo, getNearMissCombo, type RareCombo } from './data/rareCombos';
-import { protein, carbs, sides, type MenuItem } from './data/sahur';
+import { protein, carbs, sides, type MenuItem, type Region } from './data/sahur';
 import { iftar } from './data/iftar';
 import { takjil } from './data/takjil';
 import type { QuizResult } from './data/quiz';
@@ -31,9 +32,23 @@ import { config } from './config';
 
 type Mode = 'sahur' | 'iftar' | 'takjil';
 type ActiveModal = 'quiz' | 'bingo' | 'challenge' | 'achievements' | null;
+type RegionOption = Region | 'semua';
+
+const REGION_STORAGE_KEY = 'ramadan-spin-region';
+
+function getStoredRegion(): RegionOption {
+  try {
+    const stored = localStorage.getItem(REGION_STORAGE_KEY);
+    if (stored && ['semua', 'jawa', 'sumatra', 'sulawesi', 'kalimantan', 'bali-nusra'].includes(stored)) {
+      return stored as RegionOption;
+    }
+  } catch {}
+  return 'semua';
+}
 
 function App() {
   const [mode, setMode] = useState<Mode>('sahur');
+  const [region, setRegion] = useState<RegionOption>(getStoredRegion);
   const [isSpinning, setIsSpinning] = useState(false);
   const [results, setResults] = useState<MenuItem[] | null>(null);
   const [copied, setCopied] = useState(false);
@@ -64,6 +79,16 @@ function App() {
   const shareCardRef = useRef<HTMLDivElement>(null);
   const resultSectionRef = useRef<HTMLDivElement>(null);
   const ramadanDay = getRamadanDay();
+
+  const handleRegionChange = (newRegion: RegionOption) => {
+    setRegion(newRegion);
+    try {
+      localStorage.setItem(REGION_STORAGE_KEY, newRegion);
+    } catch {}
+  };
+
+  const filteredIftar = useMemo(() => filterByRegion(iftar, region), [region]);
+  const filteredTakjil = useMemo(() => filterByRegion(takjil, region), [region]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -119,9 +144,9 @@ function App() {
     if (mode === 'sahur') {
       newResults = getSahurCombo(protein, carbs, sides);
     } else if (mode === 'iftar') {
-      newResults = [getRandomItem(iftar)];
+      newResults = [getRandomItem(filteredIftar)];
     } else {
-      newResults = getRandomItems(takjil, 3);
+      newResults = getRandomItems(filteredTakjil, 3);
     }
 
     setTimeout(() => {
@@ -209,12 +234,12 @@ function App() {
       ];
     }
     if (mode === 'iftar') {
-      return [{ items: iftar, result: results?.[0] ?? null, delay: 1000 }];
+      return [{ items: filteredIftar, result: results?.[0] ?? null, delay: 1000 }];
     }
     return [
-      { items: takjil, result: results?.[0] ?? null, delay: 600 },
-      { items: takjil, result: results?.[1] ?? null, delay: 900 },
-      { items: takjil, result: results?.[2] ?? null, delay: 1200 },
+      { items: filteredTakjil, result: results?.[0] ?? null, delay: 600 },
+      { items: filteredTakjil, result: results?.[1] ?? null, delay: 900 },
+      { items: filteredTakjil, result: results?.[2] ?? null, delay: 1200 },
     ];
   };
 
@@ -250,6 +275,7 @@ function App() {
 
       <main className="w-full max-w-sm md:max-w-md space-y-4">
         <ModeSelector mode={mode} onChange={setMode} />
+        <RegionSelector region={region} onChange={handleRegionChange} />
 
         <section className="bg-card rounded-2xl p-6 border border-gold/20" aria-label="Slot machine">
           <h2 className="text-center text-lg font-semibold mb-4 text-gold">

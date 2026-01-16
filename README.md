@@ -95,21 +95,6 @@ Contributions welcome!
 - Performance optimizations
 - Accessibility improvements
 
-## Roadmap
-
-- [x] Menu Spin (Sahur/Iftar/Takjil)
-- [x] Share Card generation
-- [x] Daily spin limit + bonus system
-- [x] Ramadan Quiz
-- [x] Ramadan Bingo
-- [x] Achievement badges
-- [x] Streak tracking
-- [x] Challenge friends
-- [ ] User-submitted menu items
-- [ ] Regional variations (Jawa, Sumatra, Sulawesi, etc.)
-- [ ] "Menu terpopuler hari ini" stats
-- [ ] THR Splitter (menjelang Lebaran)
-
 ## License
 
 MIT — See [LICENSE](./LICENSE)

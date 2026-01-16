@@ -1,7 +1,19 @@
+export type Region = 'jawa' | 'sumatra' | 'sulawesi' | 'kalimantan' | 'bali-nusra';
+
+export const REGIONS: { id: Region | 'semua'; name: string; emoji: string }[] = [
+  { id: 'semua', name: 'Semua', emoji: '🇮🇩' },
+  { id: 'jawa', name: 'Jawa', emoji: '🏛️' },
+  { id: 'sumatra', name: 'Sumatra', emoji: '🌋' },
+  { id: 'sulawesi', name: 'Sulawesi', emoji: '🦐' },
+  { id: 'kalimantan', name: 'Kalimantan', emoji: '🌴' },
+  { id: 'bali-nusra', name: 'Bali & Nusa Tenggara', emoji: '🏝️' },
+];
+
 export interface MenuItem {
   id: string;
   name: string;
   emoji: string;
+  region?: Region;
 }
 
 export const protein: MenuItem[] = [
